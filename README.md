@@ -3,10 +3,10 @@
 ##### 1) Create folder **custom_modules** in your project root folder: 
 ---
 * Project_Name/custom_modules
-##### 2) Added folder with library to your **custom_modules** folder:
+##### 2) Add folder with library to your **custom_modules** folder:
 ---
 * Project_Name/custom_modules/RNOkaySDK
-##### 3) Added to package.json ***dependencies***:
+##### 3) Add to package.json ***dependencies***:
 ---
 *  "react-native-okay-sdk": "file:custom_modules/RNOkaySDK"
 ##### 4) Install node_modules:
@@ -38,7 +38,7 @@ buildscript {
     .....
 }
 ```
-* Added maven repository to build.gradle
+* Add maven repository to build.gradle
 ```sh
 allprojects {
     repositories {
@@ -50,7 +50,7 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
 
         }
-        // Begin: Added This
+        // Begin: Add This
         maven {
             url 'https://dl.bintray.com/okaythis/maven'
         }
@@ -58,10 +58,10 @@ allprojects {
     }
 }
 ```
-##### 7) Added permissions to **AndroidManifest.xml**:
+##### 7) Add permissions to **AndroidManifest.xml**:
 ---
 * Open Project_Name/android/src/main/AndroidManifest.xml
-* Added user-permissions to AndroidManifest.xml
+* Add user-permissions to AndroidManifest.xml
 ````sh
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -70,7 +70,7 @@ allprojects {
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 ````
-##### 8) Added **databinding** and **multidex** for android: 
+##### 8) Add **databinding** and **multidex** for android: 
 ---
 * open Project_Name/android/app/build.gradle
 ```sh
@@ -81,14 +81,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    // Begin Added DataBinding
+    // Begin Add DataBinding
     dataBinding {
         enabled = true
     }
     // End
     defaultConfig {
        ...
-       multiDexEnabled true // Added this line
+       multiDexEnabled true // Add this line
     }
     ...
 }
