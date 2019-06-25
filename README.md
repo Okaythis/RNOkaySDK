@@ -128,10 +128,6 @@ android {
 ### Usage
 
 ##### Allowed methods:
-* permissionRequest()
-```sh 
-     RNOkaySdk.permissionRequest().then(response => console.log(response)); // Response: Array or required permissions
-```
 * init(endpoint) // (ONLY FOR ANDROID). PSSAddress for example 'http://protdemo.demohoster.com'
 ```sh 
     CompontentDidMount() {
@@ -139,6 +135,32 @@ android {
             ...
         );
     }
+```
+* permissionRequest()
+```sh 
+     RNOkaySdk.permissionRequest().then(response => console.log(response)); // Response: Array or required permissions
+```
+
+* enrollProcedure(SpaEnrollData)
+```sh
+    firebase.iid().get()
+      .then(instanceID => {
+        RNOkaySdk.enrollProcedure({
+          SpaEnrollData: {
+            host: "http://protdemo.demohoster.com", // PSS server address
+            appPns: instanceID,
+            pubPss: pubPssBase64, // public Pss key https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
+            installationId: "9990", // installationId https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
+            pageTheme: { // Page Theme customization, if you don't want customization: pageTheme: null. All property with color is int.
+               actionBarTitle: "YOUR_ACTION_BAR_TITLE",
+               actionBarBackgroundColor: 5,
+               actionBarTextColor: 10,
+               buttonTextColor: 15,
+            }
+          }
+        }).then(response => console.log(response));
+      })
+      .catch(error => console.log(error));
 ```
 * updateDeviceToken(token) // (ONLY FOR iOS). Token received from PushNotificationsIOS
 ```sh 
@@ -150,8 +172,6 @@ android {
           ...
         );
     }
-    
-    
 ```
 * isEnrolled()
 * isReadyForAuthorization()
@@ -180,27 +200,6 @@ android {
           })
           .catch(error => console.log(error));
     }
-```
-* enrollProcedure(SpaEnrollData)
-```sh
-    firebase.iid().get()
-      .then(instanceID => {
-        RNOkaySdk.enrollProcedure({
-          SpaEnrollData: {
-            host: "http://protdemo.demohoster.com", // PSS server address
-            appPns: instanceID,
-            pubPss: pubPssBase64, // public Pss key https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
-            installationId: "9990", // installationId https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
-            pageTheme: { // Page Theme customization, if you don't want customization: pageTheme: null. All property with color is int.
-               actionBarTitle: "YOUR_ACTION_BAR_TITLE",
-               actionBarBackgroundColor: 5,
-               actionBarTextColor: 10,
-               buttonTextColor: 15,
-            }
-          }
-        }).then(response => console.log(response));
-      })
-      .catch(error => console.log(error));
 ```
 
 ### Page Theme properies for Android
