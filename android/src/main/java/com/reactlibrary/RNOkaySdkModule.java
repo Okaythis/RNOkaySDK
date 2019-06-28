@@ -144,12 +144,34 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
         ObjectMapper mapper = new ObjectMapper();
         PageTheme pageTheme = new PageTheme();
         try {
-            pageTheme = mapper.convertValue(pageThemeMap.toHashMap(), PageTheme.class);
+            pageTheme = mapper.convertValue(toMap(pageThemeMap), PageTheme.class);
         } catch (Exception e) {
             promise.reject("Invalid object property");
         }
         return pageTheme;
     }
+
+    public static Map<String, Object> toMap(@Nullable ReadableMap readableMap) {
+      if (readableMap == null) {
+          return null;
+      }
+
+      ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
+      if (!iterator.hasNextKey()) {
+          return null;
+      }
+
+      Map<String, Object> result = new HashMap<>();
+      while (iterator.hasNextKey()) {
+          String key = iterator.nextKey();
+          if(key.contains("Color")){
+              result.put(key, Color.parseColor(readableMap.getString(key)));
+          } else {
+              result.put(key, readableMap.getString(key));
+          }
+      }
+      return result;
+  }
 
 
     @Override

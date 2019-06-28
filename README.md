@@ -36,6 +36,11 @@ buildscript {
         supportLibVersion = "28.0.0"
     }
     .....
+    dependencies {
+      classpath("com.android.tools.build:gradle:3.4.1") // update gradle to 3.4.1
+      ...
+    }
+    .....
 }
 ```
 * Add maven repository to build.gradle
@@ -151,11 +156,11 @@ android {
             appPns: instanceID,
             pubPss: pubPssBase64, // public Pss key https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
             installationId: "9990", // installationId https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
-            pageTheme: { // Page Theme customization, if you don't want customization: pageTheme: null. All property with color is int.
-               actionBarTitle: "YOUR_ACTION_BAR_TITLE",
-               actionBarBackgroundColor: 5,
-               actionBarTextColor: 10,
-               buttonTextColor: 15,
+            pageTheme: { // Page Theme customization, if you don't want customization: pageTheme: null.
+              actionBarTitle: "YOUR_ACTION_BAR_TITLE",
+              actionBarBackgroundColor: "#ffffff",
+              actionBarTextColor: "#ffffff",
+              buttonTextColor: "#ffffff",
             }
           }
         }).then(response => console.log(response));
