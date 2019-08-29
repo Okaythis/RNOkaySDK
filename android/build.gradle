@@ -44,7 +44,7 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.okaythis.sdk:psa:1.0.7'
+    implementation 'com.okaythis.sdk:psa:1.1.0'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9'
 
 }

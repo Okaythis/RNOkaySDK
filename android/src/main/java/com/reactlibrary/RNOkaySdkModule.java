@@ -3,6 +3,9 @@ package com.reactlibrary;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
@@ -11,22 +14,32 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itransition.protectoria.psa_multitenant.data.SpaStorage;
+import com.itransition.protectoria.psa_multitenant.protocol.scenarios.linking.LinkingScenarioListener;
+import com.itransition.protectoria.psa_multitenant.protocol.scenarios.unlinking.UnlinkingScenarioListener;
+import com.itransition.protectoria.psa_multitenant.state.ApplicationState;
 import com.protectoria.psa.PsaManager;
 import com.protectoria.psa.api.PsaConstants;
+import com.protectoria.psa.api.converters.PsaIntentUtils;
 import com.protectoria.psa.api.entities.SpaAuthorizationData;
 import com.protectoria.psa.api.entities.SpaEnrollData;
 import com.protectoria.psa.dex.common.data.enums.PsaType;
 import com.protectoria.psa.dex.common.ui.PageTheme;
 import com.protectoria.psa.ui.activities.authorization.AuthorizationActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class RNOkaySdkModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
 
+    private PsaManager psaManager;
     private Promise mPickerPromise;
 
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
@@ -35,7 +48,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
             if (requestCode == PsaConstants.ACTIVITY_REQUEST_CODE_PSA_ENROLL) {
                 if (resultCode == Activity.RESULT_OK) {
-                    mPickerPromise.resolve(resultCode);
+                    mPickerPromise.resolve(PsaIntentUtils.enrollResultFromIntent(data));
                 } else {
                     mPickerPromise.reject("" + resultCode);
                 }
@@ -52,9 +65,34 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
         }
     };
 
+    private final LinkingScenarioListener mLinkingScenarioListener = new LinkingScenarioListener() {
+        @Override
+        public void onLinkingCompletedSuccessful(long l, String s) {
+            mPickerPromise.resolve("Linking completed");
+        }
+
+        @Override
+        public void onLinkingFailed(ApplicationState applicationState) {
+            mPickerPromise.resolve("Error status" + applicationState);
+        }
+    };
+
+    private final UnlinkingScenarioListener mUnlinkingScenarioListener = new UnlinkingScenarioListener() {
+        @Override
+        public void onUnlinkingCompletedSuccessful() {
+            mPickerPromise.resolve("Unlinking completed");
+        }
+
+        @Override
+        public void onUnlinkingFailed(@NonNull ApplicationState applicationState) {
+            mPickerPromise.reject("Error status" + applicationState);
+        }
+    };
+
 
     public RNOkaySdkModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        psaManager = PsaManager.init(reactContext, new CrashlyticsExceptionLogger());
         this.reactContext = reactContext;
         reactContext.addActivityEventListener(mActivityEventListener);
     }
@@ -62,7 +100,6 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void init(String endpoint, final Promise promise) {
-        PsaManager psaManager = PsaManager.init(reactContext, new CrashlyticsExceptionLogger());
         psaManager.setPssAddress(endpoint);
         promise.resolve("Success endpoint");
     }
@@ -111,6 +148,39 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
             authorizationData = new SpaAuthorizationData(sessionId, appPNS, null, psaType);
         }
         PsaManager.startAuthorizationActivity(activity, authorizationData);
+    }
+
+    @ReactMethod
+    public void linkTenant(String linkingCode, final ReadableMap data, final Promise promise) {
+        try {
+            ReadableMap spaStorageMap = data.getMap("SpaStorage");
+            SpaStorage spaStorage = null;
+            spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
+            spaStorage.putExternalId(spaStorageMap.getString("externalId"));
+            spaStorage.putPubPssBase64(spaStorageMap.getString("pubPss"));
+            spaStorage.putEnrollmentId(spaStorageMap.getString("enrollmentId"));
+            spaStorage.putInstallationId(spaStorageMap.getString("installationId"));
+            psaManager.linkTenant(linkingCode, spaStorage, mLinkingScenarioListener);
+        } catch ( Exception e ) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void unlinkTenant(long tenantId, final ReadableMap data, final Promise promise) {
+        try {
+            ReadableMap spaStorageMap = data.getMap("SpaStorage");
+            SpaStorage spaStorage = null;
+            spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
+            spaStorage.putExternalId(spaStorageMap.getString("externalId"));
+            spaStorage.putPubPssBase64(spaStorageMap.getString("pubPss"));
+            spaStorage.putEnrollmentId(spaStorageMap.getString("enrollmentId"));
+            spaStorage.putInstallationId(spaStorageMap.getString("installationId"));
+            PsaManager.getInstance().unlinkTenant(tenantId, spaStorage, mUnlinkingScenarioListener);
+        } catch ( Exception e ) {
+            promise.reject(e);
+        }
+
     }
 
 
