@@ -153,6 +153,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void linkTenant(String linkingCode, final ReadableMap data, final Promise promise) {
         try {
+            mPickerPromise = promise;
             ReadableMap spaStorageMap = data.getMap("SpaStorage");
             SpaStorage spaStorage = null;
             spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
@@ -169,6 +170,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void unlinkTenant(long tenantId, final ReadableMap data, final Promise promise) {
         try {
+            mPickerPromise = promise;
             ReadableMap spaStorageMap = data.getMap("SpaStorage");
             SpaStorage spaStorage = null;
             spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
