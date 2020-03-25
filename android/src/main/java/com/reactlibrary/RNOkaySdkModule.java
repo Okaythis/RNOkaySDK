@@ -4,7 +4,6 @@ package com.reactlibrary;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +17,6 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,13 +33,9 @@ import com.protectoria.psa.api.entities.SpaEnrollData;
 import com.protectoria.psa.dex.common.data.enums.PsaType;
 import com.protectoria.psa.dex.common.ui.PageTheme;
 import com.protectoria.psa.ui.activities.authorization.AuthorizationActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.reactlibrary.storage.SpaStorageImpl;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 
@@ -165,7 +159,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
         try {
             mPickerPromise = promise;
             ReadableMap spaStorageMap = data.getMap("SpaStorage");
-            SpaStorage spaStorage = null;
+            SpaStorage spaStorage = new SpaStorageImpl(reactContext);
             spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
             spaStorage.putExternalId(spaStorageMap.getString("externalId"));
             spaStorage.putPubPssBase64(spaStorageMap.getString("pubPss"));
@@ -182,7 +176,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
         try {
             mPickerPromise = promise;
             ReadableMap spaStorageMap = data.getMap("SpaStorage");
-            SpaStorage spaStorage = null;
+            SpaStorage spaStorage = new SpaStorageImpl(reactContext);
             spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
             spaStorage.putExternalId(spaStorageMap.getString("externalId"));
             spaStorage.putPubPssBase64(spaStorageMap.getString("pubPss"));
