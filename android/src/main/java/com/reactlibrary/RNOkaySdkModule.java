@@ -4,8 +4,10 @@ package com.reactlibrary;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
@@ -16,7 +18,9 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itransition.protectoria.psa_multitenant.data.SpaStorage;
 import com.itransition.protectoria.psa_multitenant.protocol.scenarios.linking.LinkingScenarioListener;
@@ -25,13 +29,19 @@ import com.itransition.protectoria.psa_multitenant.state.ApplicationState;
 import com.protectoria.psa.PsaManager;
 import com.protectoria.psa.api.PsaConstants;
 import com.protectoria.psa.api.converters.PsaIntentUtils;
+import com.protectoria.psa.api.entities.PsaEnrollResultData;
 import com.protectoria.psa.api.entities.SpaAuthorizationData;
 import com.protectoria.psa.api.entities.SpaEnrollData;
 import com.protectoria.psa.dex.common.data.enums.PsaType;
 import com.protectoria.psa.dex.common.ui.PageTheme;
 import com.protectoria.psa.ui.activities.authorization.AuthorizationActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -48,7 +58,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
             if (requestCode == PsaConstants.ACTIVITY_REQUEST_CODE_PSA_ENROLL) {
                 if (resultCode == Activity.RESULT_OK) {
-                    mPickerPromise.resolve(PsaIntentUtils.enrollResultFromIntent(data));
+                    mPickerPromise.resolve(parseEnrollmentData(data));
                 } else {
                     mPickerPromise.reject("" + resultCode);
                 }
@@ -245,6 +255,13 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
       return result;
   }
 
+  private WritableNativeMap parseEnrollmentData(Intent data) {
+      PsaEnrollResultData psaEnrollResultData = PsaIntentUtils.enrollResultFromIntent(data);
+      WritableNativeMap enrollmentData = new WritableNativeMap();
+      enrollmentData.putString("enrollmentId", psaEnrollResultData.getEnrollmentId());
+      enrollmentData.putString("externalId", psaEnrollResultData.getExternalId());
+      return enrollmentData;
+  }
 
     @Override
     public String getName() {
