@@ -34,6 +34,8 @@ import com.protectoria.psa.dex.common.data.enums.PsaType;
 import com.protectoria.psa.dex.common.ui.PageTheme;
 import com.protectoria.psa.ui.activities.authorization.AuthorizationActivity;
 import com.reactlibrary.storage.SpaStorageImpl;
+import com.protectoria.psa.dex.common.data.json.PsaGsonFactory;
+import com.itransition.protectoria.psa_multitenant.restapi.GatewayRestServer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,7 +107,12 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void init(String endpoint, final Promise promise) {
         psaManager.setPssAddress(endpoint);
+        initGatewayServer(endpoint);
         promise.resolve("Success endpoint");
+    }
+
+    private void initGatewayServer(String baseUrl) {
+        GatewayRestServer.init(new PsaGsonFactory().create(), baseUrl + "/gateway/");
     }
 
 
@@ -139,7 +146,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
 
         ReadableMap spaEnrollDataMap = data.getMap("SpaAuthorizationData");
         int sessionId = spaEnrollDataMap.getInt("sessionId");
-        String appPNS = spaEnrollDataMap.getString("appPNS");
+        String appPNS = spaEnrollDataMap.getString("appPns");
         ReadableMap pageThemeMap = spaEnrollDataMap.getMap("pageTheme");
         PsaType psaType = PsaType.OKAY;
 
@@ -160,7 +167,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
             mPickerPromise = promise;
             ReadableMap spaStorageMap = data.getMap("SpaStorage");
             SpaStorage spaStorage = new SpaStorageImpl(reactContext);
-            spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
+            spaStorage.putAppPNS(spaStorageMap.getString("appPns"));
             spaStorage.putExternalId(spaStorageMap.getString("externalId"));
             spaStorage.putPubPssBase64(spaStorageMap.getString("pubPss"));
             spaStorage.putEnrollmentId(spaStorageMap.getString("enrollmentId"));
@@ -177,7 +184,7 @@ public class RNOkaySdkModule extends ReactContextBaseJavaModule {
             mPickerPromise = promise;
             ReadableMap spaStorageMap = data.getMap("SpaStorage");
             SpaStorage spaStorage = new SpaStorageImpl(reactContext);
-            spaStorage.putAppPNS(spaStorageMap.getString("appPNS"));
+            spaStorage.putAppPNS(spaStorageMap.getString("appPns"));
             spaStorage.putExternalId(spaStorageMap.getString("externalId"));
             spaStorage.putPubPssBase64(spaStorageMap.getString("pubPss"));
             spaStorage.putEnrollmentId(spaStorageMap.getString("enrollmentId"));
