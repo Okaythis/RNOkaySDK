@@ -190,7 +190,7 @@ CompontentDidMount() {
 }
 ```
 
-### **How to enrollment a user**
+### **How to enroll a user**
 If the permission above have been granted we can now proceed to enrolling the user. Okay SDK provides the *enrollProcedure(SpaEnrollData)* method which takes a Json with "SpaEnrollData" as key. 
 
 ```javascript
