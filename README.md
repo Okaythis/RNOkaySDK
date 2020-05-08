@@ -116,6 +116,9 @@ android {
     ...
 }
 ```
+##### Install react-native Firebase:
+
+Please see this document for further instruction on how to install Firebase for React Native https://rnfirebase.io/.
 <br>
 
 
@@ -144,9 +147,6 @@ If you are using pods please see this guide.
 
 Please visit this link to enable Push Notification for iOS devices when using React Native: https://facebook.github.io/react-native/docs/pushnotificationios
 
-##### Install react-native Firebase:
-
-Please see this document for further instruction on how to install Firebase for React Native https://rnfirebase.io/.
 
 ## **API Usage**
 - init(okayServerAdress: string): Promise<string> (Android Only)
