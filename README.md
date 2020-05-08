@@ -1,49 +1,46 @@
-### Installation
+# Installing Okay React Native Module 
 
-##### 1) Create folder **custom_modules** in your project root folder:
 
----
-
-- Project_Name/custom_modules
-
-##### 2) Add folder with library to your **custom_modules** folder:
-
----
-
-- Project_Name/custom_modules/RNOkaySDK
-
-##### 3) Add to package.json **_dependencies_**:
-
----
-
-- "react-native-okay-sdk": "file:custom_modules/RNOkaySDK"
-
-##### 4) Install node_modules:
-
----
+####  Create a folder called **custom_modules** in your React Native project root folder:
 
 ```sh
-$ npm install
+$ mkdir ~/project_dir/custom_modules
 ```
 
-##### 5) Link library with react-native:
+#####  Copy the downloaded React Native module from this repository to custom_modules folder
 
----
+```sh
+$ cp ~/Downloads/RNOkaySDK ~/project_dir/custom_modules
+```
+#####  Add RNOKaySDK as a local dependency to your package.json file:
+
+```sh
+"react-native-okay-sdk": "file:custom_modules/RNOkaySDK"
+```
+
+##### Install node_modules:
+
+Run the following command from your project root folder
+
+```sh
+$ yarn install
+```
+
+##### Link library with react-native:
+
+Run the following command from your project root folder
 
 ```sh
 $ react-native link react-native-okay-sdk
 ```
+<br>
 
-### Android
+## Android
+### Configure Android project:
 
-##### 6) Configure Android project:
+Locate your ***project_dir/android/app/build.gradle*** file in your project workspace, then set your minSDKVersion in the *build.gradle* to API 16.
 
----
-
-- Open Project_Name/android/build.gradle
-- Set minSdkVersion in build.gradle
-
-```sh
+```groovy
 buildscript {
     ext {
         buildToolsVersion = "28.0.3"
@@ -61,9 +58,9 @@ buildscript {
 }
 ```
 
-- Add maven repository to build.gradle
+Add Okay maven repository to your Android ***project_dir/android/build.gradle***  file
 
-```sh
+```groovy
 allprojects {
     repositories {
         mavenLocal()
@@ -83,29 +80,23 @@ allprojects {
 }
 ```
 
-##### 7) Add permissions to **AndroidManifest.xml**:
+#### Add permissions to AndroidManifest.xml**:
+Locate your *project_dir/android/src/main/AndroidManifest.xml* file, then add these Android permissions to the file.
 
----
-
-- Open Project_Name/android/src/main/AndroidManifest.xml
-- Add user-permissions to AndroidManifest.xml
-
-```sh
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+```xml
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 ```
 
-##### 8) Add **databinding** and **multidex** for android:
+##### Add **databinding** and **multidex** for android:
 
----
+Add the following to your Android *project_dir/android/app/build.gradle* file
 
-- open Project_Name/android/app/build.gradle
-
-```sh
+```groovy
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -125,76 +116,94 @@ android {
     ...
 }
 ```
+<br>
 
-##### 9) Install react-native Firebase:
 
-- https://rnfirebase.io/docs/v5.x.x/installation/initial-setup
-- https://rnfirebase.io/docs/v5.x.x/installation/android
-- https://rnfirebase.io/docs/v5.x.x/messaging/android
+## **iOS**
+### **Configure iOS project:**
 
-### iOS
+#### Download **PSA.framework** and **PSACommon.framework**:
+You can get the zipped version of the SDK here: https://github.com/Okaythis/PSACommonIOS. Unpack content of **PSA.zip** and **PSACommon.zip** to the RN's project_dir/ios
 
-##### 6) Download **PSA.framework** and **PSACommon.framework**:
+If you are using pods please see this guide.
 
-- https://github.com/Okaythis/PSACommonIOS
+####  Setup XCode project structure
 
-##### 7) Unpack content of **PSA.zip** and **PSACommon.zip** to the RN's PROJECT_DIR/ios
+- Right-click on **Frameworks** folder in Project Structure
+- Click Add files to "PROJECT_NAME"...
+- Select **PSA.framework** and **PSACommon.framework** from your computer.
 
-##### 8) Open XCode project structure
-
-- right-click on **Frameworks** folder in Project Structure
-- click Add files to "PROJECT_NAME"...
-- Added **PSA.framework** and **PSACommon.framework**
-
-##### 9) Open **PROJECT_NAME** target
+#### Open **PROJECT_NAME** target
 
 - Open **Build Phases** tab
-- Remove **PSA.framework** and **PSACommon.framework** from **_Link Binaries with Libraries_**
+- Remove **PSA.framework** and **PSACommon.framework** from **Link Binaries with Libraries**
 - Open **General** tab
-- Drag and drop **PSA.framework** and **PSACommon.framework** into **_Embedded Binaries_**
+- Drag and drop **PSA.framework** and **PSACommon.framework** into **Embedded Binaries**
 
-##### 10) Added Push Notifications
+##### Enable Push Notifications
 
-- https://facebook.github.io/react-native/docs/pushnotificationios
+Please visit this link to enable Push Notification for iOS devices when using React Native: https://facebook.github.io/react-native/docs/pushnotificationios
 
-##### 11) Install react-native Firebase:
+##### Install react-native Firebase:
 
-- https://rnfirebase.io/docs/v5.x.x/installation/initial-setup
-- https://rnfirebase.io/docs/v5.x.x/installation/ios
-- https://rnfirebase.io/docs/v5.x.x/messaging/ios
+Please see this document for further instruction on how to install Firebase for React Native https://rnfirebase.io/.
 
-### Usage
+## **API Usage**
+- init(okayServerAdress: string): Promise<string> (Android Only)
+- permissionRequest(): Promise<[]>
+- updateDeviceToken(token) (iOS only)
+- isEnrolled(): boolean
+- enrollProcedure(SpaEnrollData): Promise
+- linkTenant(linkingCode: number, SpaStorage): Promise
+- unlinkTenant(tenantId: number, SpaStorage): Promise
+- isReadyForAuthorization(): boolean
+- authorization(SpaAuthorizationData): Promise
 
-##### Allowed methods:
+### **SDK Initialization(Android Only):**
 
-- init(endpoint) // (ONLY FOR ANDROID). PSSAddress for example 'http://protdemo.demohoster.com'
+We will need to call the init(endpoint) on the SDK to properly initialize Okay server address on Android. For example we pass in 'https://demostand.okaythis.com/' as our server endpoint.
 
-```sh
-    CompontentDidMount() {
-        RNOkaySdk.init("http://protdemo.demohoster.com").then(response =>
-            ...
-        );
-    }
+```javascript
+CompontentDidMount() {
+  RNOkaySdk.init("https://demostand.okaythis.com/").then(response =>
+     ...
+  );
+}
 ```
 
-- permissionRequest()
+For Okay to correctly, you are required to prompt the user to grant the following permissions return by  *permissionRequest()* method.
 
-```sh
-     RNOkaySdk.permissionRequest().then(response => console.log(response)); // Response: Array or required permissions
+```javascript
+// fetches an array of required permissions  
+RNOkaySdk.permissionRequest().then(response => console.log(response)); 
 ```
 
-- enrollProcedure(SpaEnrollData)
+### **Update Okay with Token received from PushNotificationsIOS (iOS ONLY)**
+We will need to update Okay with push notification token generated for iOS devices.
 
-```sh
-    firebase.iid().get()
-      .then(instanceID => {
+```javascript
+// We can update iOS PNS token in this lifecycle method here
+CompontentDidMount() {
+  PushNotificationIOS.addEventListener('register', token => {
+    RNOkaySdk.updateDeviceToken(token);
+    });
+}
+```
+
+### **How to enrollment a user**
+If the permission above have been granted we can now proceed to enrolling the user. Okay SDK provides the *enrollProcedure(SpaEnrollData)* method which takes a Json with "SpaEnrollData" as key. 
+
+```javascript
+    firebase.iid().getToken()
+      .then(token => {
         RNOkaySdk.enrollProcedure({
           SpaEnrollData: {
-            host: "http://protdemo.demohoster.com", // PSS server address
-            appPns: instanceID,
-            pubPss: pubPssBase64, // public Pss key https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
-            installationId: "9990", // installationId https://github.com/Okaythis/okay-example/wiki/Mobile-Client-Settings
-            pageTheme: { // Page Theme customization, if you don't want customization: pageTheme: null.
+            host: "https://demostand.okaythis.com/", // Okay server address
+            appPns: token,
+            pubPss: pubPssBase64, 
+            installationId: "9990", 
+            pageTheme: { 
+              // Page Theme customization, if you don't want customization: pageTheme: null.
               actionBarTitle: "YOUR_ACTION_BAR_TITLE",
               actionBarBackgroundColor: "#ffffff",
               actionBarTextColor: "#ffffff",
@@ -205,98 +214,103 @@ android {
       })
       .catch(error => console.log(error));
 ```
+SpaEnrollData contains several keys that are required for a secure communication with Okay servers. 
 
-- updateDeviceToken(token) // (ONLY FOR iOS). Token received from PushNotificationsIOS
+*"appPns"*: This is your push notification token from Firebase(This allows us to send notification to Android devices). For testing purposes we ask our users to use this value **9990** as their installationId
 
-```sh
-    // For example
-    CompontentDidMount() {
-         PushNotificationIOS.addEventListener('register', token => {
-                RNOkaySdk.updateDeviceToken(token);
-          })
-          ...
-        );
-    }
+ *"pubPss"*: This is a public key we provide to applications that use our SDK for secure communication with our server. For testing purposes we ask our users to use the value below as their *"pubPss"* key.
+
+ ```javascript
+  const pubPssBase64 = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxgyacF1NNWTA6rzCrtK60se9fVpTPe3HiDjHB7MybJvNdJZIgZbE9k3gQ6cdEYgTOSG823hkJCVHZrcf0/AK7G8Xf/rjhWxccOEXFTg4TQwmhbwys+sY/DmGR8nytlNVbha1DV/qOGcqAkmn9SrqW76KK+EdQFpbiOzw7RRWZuizwY3BqRfQRokr0UBJrJrizbT9ZxiVqGBwUDBQrSpsj3RUuoj90py1E88ExyaHui+jbXNITaPBUFJjbas5OOnSLVz6GrBPOD+x0HozAoYuBdoztPRxpjoNIYvgJ72wZ3kOAVPAFb48UROL7sqK2P/jwhdd02p/MDBZpMl/+BG+qQIDAQAB'
+
+ ```
+ 
+  *"installationId"*:  is also a number that we also provide for applications that use our SDK. For testing purposes we ask our users to use this value **9990** as their installationId
+ 
+  *"pageTheme"*: This is a JSON object that allows you to customize the colors for our enrollment and authorization screens to suit your product branding. [Click here to see all valid color properties](https://github.com/Okaythis/okay-sdk-android/wiki/PageTheme-(Android))
+
+
+### **How to link a user**
+The linkTenant(linkingCode, SpaStorage) method links a user of your application with an existing tenant on Okay Cloud Based solution. When you make a linking request to your Okay servers, it returns a linkingCode as part of its response (For more information on how to send a linking request please see this [documatation](https://okaythis.com/developer/documentation/v1/server#1.2)). The linking code can be passed directly to this method after a a request to Okay Service or entered by a user via a user interface. This depends on your implementation and business logic.
+The **externalId** can be retrieved from the *RNOkaySdk.enrollProcedure(...).then( externalId => ...)* method, if the method was called and executed successfully.
+
+```javascript
+  firebase.iid().getToken()
+    .then(token => {
+      RNOkaySdk.linkTenant(
+        linkingCode,
+        {
+          SpaStorage: {
+            appPns: token,
+            pubPss: pubPssBase64,
+            externalId: 'YOUR_EXTERNAL_ID',
+            installationId: "9990",
+            enrollmentId: null
+          }
+        })
+  })
 ```
 
-- isEnrolled()
-- isReadyForAuthorization()
-- authorization(SpaAuthorizationData) // Called after receive message from firebase
-- linkTenant(linkingCode, SpaStorage);
-- unlinkTenant(tenantId, SpaStorage);
+### **How to unlink a user**
+If a user was successfully linked to a tenant and you now wish to unlink that user from your tenant on Okay, you can use the *unlinkTenant(tenantId, SpaStorage)* method to do this as described below.
 
-```sh
+```javascript
+  firebase.iid().getToken()
+    .then(token => {
+      RNOkaySdk.unlinkTenant(
+        tenantId,
+        {
+          SpaStorage: {
+            appPns: token,
+            pubPss: pubPssBase64,
+            externalId: 'YOUR_EXTERNAL_ID',
+            installationId: "9990",
+            enrollmentId: null
+          }
+      })
+  })
+```
+
+
+### **Authorizing a User's Action**
+When there is a transaction that needs to be authorized by your application, Okay sends a push notification to your mobile app with details needed to process the authorization on the client side. The body of the push notification has the following shape as shown below:
+
+```json
+{ 
+  tenantId: <int>,
+  sessionId: <int> 
+}
+```
+
+When the push notification is received on the client side, you can retrieve the **_sessionId_** from the push notification body and in turn, pass the value to *RNOkaySdk.authorization(SpaAuthorizationData)* method directly.
+
+```javascript
+  CompontentDidMount() {
     firebase.messaging().onMessage(message => {
-      startAuthorization(message.data.sessionId);
-    });
-```
+        startAuthorization(message.data.sessionId);
+      });
+  }
 
-```sh
-    startAuthorization = (sessionId) => {
-        firebase.iid().get()
-          .then(instanceID => {
-            RNOkaySdk.authorization({
-              SpaAuthorizationData: {
-                sessionId: sessionId, // Received from firebase messaging
-                appPNS: instanceID,
-                pageTheme: { // Page Theme customization, if you don't want customization: pageTheme: null
-                    actionBarTitle: "YOUR_ACTION_BAR_TITLE",
-                    actionBarBackgroundColor: 5,
-                    actionBarTextColor: 10,
-                    buttonTextColor: 15,
-                }
-              }
-            }).then(response => console.log(response));
-          })
-          .catch(error => console.log(error));
-    }
-```
-
-- linkTenant(linkingCode, SpaStorage)
-- You should always pass **appPns** and **externalId** other parameters can be **null**
-- **linkingCode** code from SP server. It can be entered by user, or received from server (depends on your relization)
-- You should save **externalId** after RNOkaySdk.enrollProcedure(...).then( externalId => ...) method.
-
-```sh
-      firebase.iid().get()
-        .then(instanceID => {
-          RNOkaySdk.linkTenant(
-            linkingCode,{
-            SpaStorage: {
-              appPns: instanceID,
-              pubPss: pubPssBase64,
-              externalId: 'YOUR_EXTERNAL_ID',
-              installationId: "9990",
-              enrollmentId: null
+  startAuthorization = (sessionId) => {
+    firebase.iid().getToken()
+      .then(token => {
+        RNOkaySdk.authorization({
+          SpaAuthorizationData: {
+            sessionId: sessionId, // Received from firebase messaging
+            appPns: token,
+            pageTheme: { // Page Theme customization, if you don't want customization: pageTheme: null
+              actionBarTitle: "YOUR_ACTION_BAR_TITLE",
+              actionBarBackgroundColor: "#eeffc5",
+              actionBarTextColor: "#ffcc34",
+              buttonTextColor: "#ccccc4",
             }
-          })
-        }
-```
-
-- unlinkTenant(tenantId, SpaStorage);
-
-* **tenantId** -> Number
-
-```sh
-      firebase.iid().get()
-        .then(instanceID => {
-          RNOkaySdk.unlinkTenant(
-            tenantId,{
-            SpaStorage: {
-              appPns: instanceID,
-              pubPss: pubPssBase64,
-              externalId: 'YOUR_EXTERNAL_ID',
-              installationId: "9990",
-              enrollmentId: null
-            }
-          })
-        }
+          }
+        }).then(response => console.log(response));
+      })
+      .catch(error => console.log(error));
+  }
 ```
 
 ### Page Theme properies for Android
 
 - https://github.com/Okaythis/okay-sdk-android/wiki/PageTheme-(Android)
-
-### Page Theme properies for iOS: Not available now.
-
-- https://github.com/Okaythis/okay-sdk-android/wiki/PSATheme-(iOS)
