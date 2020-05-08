@@ -80,7 +80,7 @@ allprojects {
 }
 ```
 
-#### Add permissions to AndroidManifest.xml**:
+#### Add permissions to AndroidManifest.xml:
 Locate your *project_dir/android/src/main/AndroidManifest.xml* file, then add these Android permissions to the file.
 
 ```xml
