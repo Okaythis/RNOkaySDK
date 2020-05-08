@@ -277,8 +277,8 @@ When there is a transaction that needs to be authorized by your application, Oka
 
 ```json
 { 
-  tenantId: <int>,
-  sessionId: <int> 
+  "tenantId": <int>,
+  "sessionId": <int> 
 }
 ```
 
