@@ -171,7 +171,7 @@ CompontentDidMount() {
 }
 ```
 
-For Okay to correctly, you are required to prompt the user to grant the following permissions return by  *permissionRequest()* method.
+For Okay to work correctly, you are required to prompt the user to grant the following permissions return by  *permissionRequest()* method.
 
 ```javascript
 // fetches an array of required permissions  
